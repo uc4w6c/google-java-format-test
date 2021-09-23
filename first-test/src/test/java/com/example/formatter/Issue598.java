@@ -103,6 +103,39 @@ public class Issue598 {
         sb.replace(offset + 56, offset + 70, "");
         System.out.println(sb.toString());
     }
+
+    @Test
+    void import末尾にコメントがあった場合の挙動確認() throws FormatterException, IOException, Exception {
+        String input = """
+                package com.sun.something;
+
+                import com.x; // テスト
+
+                public class MockedLiveServiceExecutionContext {
+                }
+                """;
+
+        Path path = tempDir.resolve("Foo.java");
+        Files.write(path, input.getBytes(UTF_8));
+
+        StringWriter out = new StringWriter();
+        StringWriter err = new StringWriter();
+        Main main = new Main(new PrintWriter(out, true), new PrintWriter(err, true), System.in);
+        String[] args = new String[] {"-i", path.toString()};
+        main.format(args);
+
+        String output = new String(Files.readAllBytes(path), UTF_8);
+        System.out.println("output:");
+        System.out.println(output);
+
+        // コメント行だけ残ってて大丈夫か念のため確認
+        String[] args2 = new String[] {"-i", path.toString()};
+        main.format(args2);
+        String output2 = new String(Files.readAllBytes(path), UTF_8);
+        System.out.println("output2:");
+        System.out.println(output2);
+    }
+
     // MEMO
     /*
     RemoveUnusedImports.removeUnusedImports が怪しい
@@ -116,5 +149,15 @@ public class Issue598 {
     RemoveUnusedImports.removeUnusedImports
     UnusedImportScanner.scan
     が処理している部分
+
+    RemoveUnusedImports.buildReplacements
+    を直せばいけるかも
+
+    対応方法
+     全てのimportを削除した時に、前か後ろの行を削除。
+
+    気になる部分
+     - importの前後がコメントだったらどうしよう。
+
      */
 }

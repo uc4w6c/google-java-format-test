@@ -136,7 +136,35 @@ public class Issue598 {
         System.out.println(output2);
     }
 
-    // MEMO
+  @Test
+  void コメント行の扱いを確認() throws FormatterException, IOException, Exception {
+    String input = """
+                package com.sun.something;
+                // test
+                // import java.nio.file.Path;
+
+                public class MockedLiveServiceExecutionContext {
+                  /*public Path index() {
+                    return Paths.get("");
+                  }*/
+                }
+                """;
+
+    Path path = tempDir.resolve("Foo.java");
+    Files.write(path, input.getBytes(UTF_8));
+
+    StringWriter out = new StringWriter();
+    StringWriter err = new StringWriter();
+    Main main = new Main(new PrintWriter(out, true), new PrintWriter(err, true), System.in);
+    String[] args = new String[] {"-i", path.toString()};
+    main.format(args);
+
+    String output = new String(Files.readAllBytes(path), UTF_8);
+    System.out.println("output:");
+    System.out.println(output);
+  }
+
+  // MEMO
     /*
     RemoveUnusedImports.removeUnusedImports が怪しい
 

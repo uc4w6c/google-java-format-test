@@ -1,0 +1,30 @@
+plugins {
+	id 'java'
+}
+
+group 'org.example'
+version '1.0-SNAPSHOT'
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation(fileTree(dir: 'libs', include: ['google-java-format-HEAD-SNAPSHOT.jar']))
+	implementation 'com.google.guava:guava:30.1.1-jre'
+	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
+	testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+}
+
+test {
+	useJUnitPlatform()
+}
+
+test {
+	jvmArgs = [
+			'--add-exports', 'jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED',
+			'--add-exports', 'jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED',
+			'--add-exports', 'jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED',
+			'--add-exports', 'jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED',
+			'--add-exports', 'jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED']
+}

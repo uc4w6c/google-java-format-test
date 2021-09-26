@@ -3,7 +3,10 @@ package org.example;
 import java.io.IOError;
 import java.io.IOException;
 import java.net.URI;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.tools.DiagnosticCollector;
 import javax.tools.DiagnosticListener;
@@ -11,6 +14,7 @@ import javax.tools.JavaFileObject;
 import javax.tools.SimpleJavaFileObject;
 import javax.tools.StandardLocation;
 
+import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.api.JavacTrees;
 import com.sun.tools.javac.file.JavacFileManager;
 import com.sun.tools.javac.parser.JavacParser;
@@ -39,6 +43,16 @@ public class Main {
     Context context = new Context();
     JCCompilationUnit unit = parse(context, input);
     JavacTrees trees = JavacTrees.instance(context);
+
+    CustomTreeScanner scanner = new CustomTreeScanner();
+    for (var jcTree : unit.getTypeDecls()) {
+      // System.out.println(jcTree);
+      scanner.scan(jcTree, null);
+      for (String declareReference : scanner.declareReferences()) {
+        System.out.println(declareReference);
+      }
+    }
+
     System.out.println(unit);
     System.out.println(trees);
   }

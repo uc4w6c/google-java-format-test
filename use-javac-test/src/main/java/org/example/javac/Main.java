@@ -16,3 +16,20 @@ public class Main {
   }
 }
 // --add-exports jdk.compiler/com.sun.tools.javac.main=ALL-UNNAMED
+
+// パース処理
+// com.sun.tools.javac.parser.Tokens がトークン一覧
+// JavaTokenizerでファイル内の文字列を取得して一つ一つposしてTokensと一致するものを判断しているっぽい？
+// JavacParser.parseCompilationUnitにてパースしているっぽい
+// com.sun.tools.javac.parser.Scannerでトークンを総合管理(nextTokenで次のトークンを取得可能)
+// 依存関係: JavacParser -> Scanner -> JavaTokenizer -> Tokens
+
+// こっちはスキャナー
+// TreeScanner.visitApply
+//   scan(tree.meth); // System.out.println("Hello!");
+// TreeScanner.visitSelect
+//   scan(tree.selected); // System.out
+// Flow.visitIdent //
+
+// 出力処理
+// JavaCompiler.generate

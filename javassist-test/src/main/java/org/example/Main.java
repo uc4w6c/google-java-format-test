@@ -35,3 +35,8 @@ public class Main {
     cc.writeFile(compileFilePath.toString());
   }
 }
+/*
+$ java TestNewClass
+Hello!
+が出力されることを確認出来た
+ */
